@@ -11,9 +11,8 @@ import { PageNotFoundComponent } from "./page-not-found/page-not-found.component
 import { ProductModule } from "./product/product.module";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { CategoryModule} from "./category/category.module"
 
-import { PdfViewerModule } from "ng2-pdf-viewer";
-import { NgxDocViewerModule } from "ngx-doc-viewer";
 
 @NgModule({
   declarations: [AppComponent, WelcomeComponent, PageNotFoundComponent],
@@ -24,10 +23,9 @@ import { NgxDocViewerModule } from "ngx-doc-viewer";
     HttpClientModule,
     ProductModule,
     ReactiveFormsModule,
-    PdfViewerModule,
-    NgxDocViewerModule
+    CategoryModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

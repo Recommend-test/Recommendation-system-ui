@@ -6,6 +6,7 @@ import { WelcomeComponent } from "./welcome/welcome.component";
 import { ProductdetailGuardGuard } from "./product/product-list/productdetail-guard.guard";
 import { EditProductComponent } from "./product/edit-product/edit-product.component";
 import { EditProductGuardGuard } from "./product/edit-product/guard/edit-product-guard.guard";
+import { CategoryListComponent } from './category/category-list/category-list.component';
 
 const routes: Routes = [
   { path: "products", component: ProductListComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
     component: EditProductComponent,
     canDeactivate: [EditProductGuardGuard]
   },
+  { path: "categories", component: CategoryListComponent },
   { path: "welcome", component: WelcomeComponent },
   { path: "", redirectTo: "welcome", pathMatch: "full" },
   { path: "**", redirectTo: "welcome", pathMatch: "full" }
@@ -28,4 +30,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

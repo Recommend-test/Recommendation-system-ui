@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChildren }
 import { FormGroup, FormBuilder, Validators, FormArray, FormControlName, FormControl } from '@angular/forms';
 import { NumberValidator } from '../../shared/NumberValidator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Iproduct } from '../product-list/product';
+import { Iproduct } from '../model/product';
 import { ProductserviceService } from '../../services/productservice.service';
 import { Subscription, Observable, fromEvent, merge } from 'rxjs';
 import { GenericValidator } from '../../shared/GenericValidator';

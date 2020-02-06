@@ -1,61 +1,43 @@
 <div class='card'>
-    <div class='card-header'>
-      {{pageTitle}}
-    </div>
-    <div class='card-body'>
-      <div class='row'>
-        <div class='col-md-2'>Filter by: {{filterByText}}</div>
-        <div class='col-md-4'>
-          <input type='text'
-                [(ngModel)]='filterByText'/>
-        </div>
-      </div>
-     
-      <div class='table-responsive'>
-        <table class='table'
-               *ngIf='items && items.length'>
-          <thead>
-            <tr>
-              <th>
-                <button class='btn btn-primary' (click)='toggleImage()'>
-                {{showImageText}}
-                </button>
-              </th>
-              <th>Product</th>
-              <th>Code</th>
-              <th>Available</th>
-              <th>Price</th>
-              <th>5 Star Rating</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor='let product of filtedProducts' [routerLink]="['/productsDetails',product.productId]">
-              <td>
-                <img [src]='product.imageUrl'
-                [style.width.px]='imageWidth'
-                [style.margin.px]='imageMargin'
-                *ngIf='showImage'>
-              </td>
-              <td>{{product.productName}}</td>
-              <td>{{product.productCode|lowercase|convertToSpace:'-'}}</td>
-              <td>{{product.releaseDate}}</td>
-              <td>{{product.price|currency:'USD':'symbol':'1.2-2'}}</td>
-              <td><app-stars [rating]='product.starRating'
-                (notify)='recieveEvent($event)'></app-stars></td>
-                <td>
-                  <button class="btn btn-outline-primary btn-sm"
-                          [routerLink]="['/product', product.productId, 'edit']">
-                    Edit
-                  </button>
-                </td>  
-            </tr>
-          </tbody>
-         
-          
-        </table>  
-        <app-paginator [previousBtn]="previousBtn" [nextBtn]="nextBtn" (previousE)="previous()" (nextE)="next()"></app-paginator>
+  <div class='card-header'>
+    {{pageTitle}}
+  </div>
+  <div class='card-body'>
 
+    <div class='clearfix'>
+      <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/product/0/edit']">
+        Add Product
+      </button>
+    </div>
+
+    <div class='table-responsive'>
+      <table class='table' *ngIf='items && items.length'>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Code</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='let product of filtedProducts' [routerLink]="['/productsDetails',product.productId]">
+            <td>{{product.productName}}</td>
+            <td>{{product.productCode|lowercase|convertToSpace:'-'}}</td>
+            <td>
+              <button class="btn btn-outline-primary btn-sm" [routerLink]="['/product', product.productId, 'edit']">
+                Edit
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <div class="center">
+        <app-paginator [previousBtn]="previousBtn" [nextBtn]="nextBtn" (previousE)="previous()" (nextE)="next()">
+        </app-paginator>
       </div>
+
     </div>
   </div>
-  
+</div>

@@ -1,24 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductListComponent } from './product-list/product-list.component';
-import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { CategoryListComponent } from '../category/category-list/category-list.component'
+import { SharedModule } from '../shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { SharedModule } from '../shared/shared.module';
-import { EditProductComponent } from './edit-product/edit-product.component';
-
-
 
 
 @NgModule({
-  declarations: [
-    ProductListComponent,
-    ProductDetailComponent,
-    EditProductComponent
-   
-  ],
+  declarations: [CategoryListComponent],
   imports: [
     CommonModule,
     BrowserModule,
@@ -27,6 +18,9 @@ import { EditProductComponent } from './edit-product/edit-product.component';
     HttpClientModule,
     SharedModule,
     ReactiveFormsModule
+  ],
+  exports:[
+    CategoryListComponent
   ]
 })
-export class ProductModule { }
+export class CategoryModule { }

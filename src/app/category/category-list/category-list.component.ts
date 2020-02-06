@@ -1,45 +1,44 @@
-import { Component, OnInit, OnChanges } from '@angular/core';
-import { Iproduct } from '../model/product';
-import { ProductserviceService } from '../../services/productservice.service';
+import { Component, OnInit } from '@angular/core';
+import {Category} from '../model/Category'
+import { CategoryService } from '../../services/category.service';
 import { AppConstatnts } from '../../utility/AppConstatnts';
 
-
 @Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  selector: 'app-category-list',
+  templateUrl: './category-list.component.html',
+  styleUrls: ['./category-list.component.css']
 })
-export class ProductListComponent implements OnInit {
+export class CategoryListComponent implements OnInit {
 
-  pageTitle: string = AppConstatnts.productListPageTitle;
+  pageTitle: string = AppConstatnts.categoryListPageTitle;
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
   showImageText: string = 'Show Image';
   _filterByText: string;
-  filtedProducts: Iproduct[];
-  items: Iproduct[];
+  filtedcategories: Category[];
+  items: Category[];
   offset: number = 0;
   size: number = 10;
   previousBtn: string = 'disabled';
   nextBtn: string = 'page-item';
 
-  constructor(private productService: ProductserviceService) {
+  constructor(private categoryService: CategoryService) {
 
   }
 
   set filterByText(filter: string) {
     this._filterByText = filter;
-    this.filtedProducts = filter != null ? this.performFilter(this._filterByText) : this.items;
+    this.filtedcategories = filter != null ? this.performFilter(this._filterByText) : this.items;
   }
 
   get filterByText(): string {
     return this._filterByText;
   }
 
-  performFilter(filterValue: string): Iproduct[] {
-    return this.items.filter((product: Iproduct) =>
-      product.productName.toLocaleLowerCase().indexOf(filterValue.toLocaleLowerCase()) != -1
+  performFilter(filterValue: string): Category[] {
+    return this.items.filter((category: Category) =>
+      category.categoryName.toLocaleLowerCase().indexOf(filterValue.toLocaleLowerCase()) != -1
     );
   }
 
@@ -71,7 +70,7 @@ export class ProductListComponent implements OnInit {
   }
 
   displayPage(offset: number, size: number, type: string) {
-    this.productService.getProducts(offset, size).subscribe({
+    this.categoryService.getcategories(offset, size).subscribe({
       next: (data) => {
         if (type === 'init') {
           this.handleDisplayInit(data);
@@ -88,43 +87,43 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  handleDisplayInit(data: Iproduct[]) {
+  handleDisplayInit(data: Category[]) {
     if (data.length < 11 && data.length > 1) {
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
     } else if (data.length == 11) {
       data.pop();
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
     } else {
       this.handleDisplayPaginatorButtons(true, true);
     }
   }
 
-  handleDisplayDataNext(data: Iproduct[]) {
+  handleDisplayDataNext(data: Category[]) {
     if (data.length < 11 && data.length > 1) {
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
       this.handleDisplayPaginatorButtons(false, true);
     } else if (data.length == 11) {
       data.pop();
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
       this.handleDisplayPaginatorButtons(false, false);
     } else {
       this.handleDisplayPaginatorButtons(false, true);
     }
   }
 
-  handleDisplayDataPrevious(data: Iproduct[]) {
+  handleDisplayDataPrevious(data: Category[]) {
     if (data.length < 11 && data.length > 1) {
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
       this.handleDisplayPaginatorButtons(true, false);
     } else if (data.length == 11) {
       data.pop();
       this.items = data;
-      this.filtedProducts = this.items;
+      this.filtedcategories = this.items;
       this.handleDisplayPaginatorButtons(false, false);
     } else {
       this.handleDisplayPaginatorButtons(true, false);
