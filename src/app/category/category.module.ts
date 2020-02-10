@@ -6,10 +6,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CategoryManipulationComponent } from './category-manipulation/category-manipulation.component';
+
 
 
 @NgModule({
-  declarations: [CategoryListComponent],
+  declarations: [CategoryListComponent, CategoryManipulationComponent],
   imports: [
     CommonModule,
     BrowserModule,

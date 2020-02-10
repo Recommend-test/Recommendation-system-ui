@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="card-header">
+        {{pageTitle}}
+    </div>
+
+    <div class="card-body">
+        <form novalidate [formGroup]="categoryForm">
+
+            <div class="form-group row mb-2" *ngIf="showId">
+                <label class="col-md-2 col-form-label" for="categoryId">Category Id</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" id="categoryId" disabled=true type="text" formControlName="id" />
+
+                </div>
+            </div>
+
+            <div class="form-group row mb-2">
+                <label class="col-md-2 col-form-label" for="categoryNameId">Category Name</label>
+                <div class="col-md-8">
+                    <input class="form-control" id="categoryNameId" type="text" placeholder="Name (required)"
+                        formControlName="categoryName" [ngClass]="{'is-invalid': displayMessage.categoryName }" />
+                    <span class="invalid-feedback">
+                        {{displayMessage.categoryName}}
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-group row mb-2">
+                <div class="offset-md-2 col-md-4">
+                    <button class="btn btn-primary mr-3" style="width:80px;" type="submit" (click)="updateCategory()">
+                        Save
+                    </button>
+                    <button class="btn btn-outline-secondary mr-3" style="width:80px;" type="button"
+                        title="Cancel your edits" [routerLink]="['/categories']">
+                        Cancel
+                    </button>
+                   
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}
+    </div>
+</div>

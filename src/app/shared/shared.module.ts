@@ -2,14 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConvertToSpacePipe } from './ConvertToSpacePipe';
-import { PaginatorComponent } from './paginator/paginator.component';
+
+import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
 
 
 
 @NgModule({
   declarations: [
     ConvertToSpacePipe,
-    PaginatorComponent
+    CustomPaginatorComponent
   ],
   imports: [
     CommonModule
@@ -18,7 +19,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
     CommonModule,
     FormsModule,
     ConvertToSpacePipe,
-    PaginatorComponent
+    CustomPaginatorComponent
   ]
 })
 export class SharedModule { }

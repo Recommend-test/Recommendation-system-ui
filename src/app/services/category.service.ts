@@ -8,54 +8,49 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CategoryService {
+
   private categoriesUrl = "http://localhost:8082/api/v1/categories";
-  private productIdUrl = "http://localhost:8080/product/categories/";
-  private updateProductUrl = "http://localhost:8080/product/categories/update";
-  private deleteProductUrl = "http://localhost:8080/product/categories/delete";
-  private categoriesSizeUrl = "http://localhost:8080/product/categories/size";
+  private categoriesCountUrl = "http://localhost:8082/api/v1/categories/count";
+  private categoryIdUrl = "http://localhost:8082/api/v1/categories/";
+  private updateCategoryUrl = "http://localhost:8082/api/v1/categories";
+  private addCategoryUrl = "http://localhost:8082/api/v1/categories";
+  private deleteCategoryUrl = "http://localhost:8082/api/v1/categories/";
+
 
   constructor(private http: HttpClient) { }
 
-  getcategories(offset: number, size: number): Observable<Category[]> {
-    
+  //TODO : get categories in range.
+  getCategories(offset: number, size: number): Observable<Category[]> {
     return this.http
-      .get<Category[]>(this.categoriesUrl)
-      .pipe(tap(this.handleData), catchError(this.handleError));
+      .get<Category[]>(this.categoriesUrl);
   }
 
-  getcategoriesSize(): Observable<number> {
-    return this.http.get<number>(this.categoriesSizeUrl);
+  getCategoriesCount(): Observable<number> {
+    return this.http
+      .get<number>(this.categoriesCountUrl);
   }
-
-  getProductById(id: string): Observable<Category> {
-    const url = `${this.productIdUrl}/${id}`;
+  getCategoryById(id: string): Observable<Category> {
+    const url = `${this.categoryIdUrl}/${id}`;
     return this.http.get<Category>(url);
   }
 
-  updateProduct(product: Category): Observable<Category> {
-    const url = this.updateProductUrl;
+  addCategory(category: Category): Observable<Category> {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http
-      .put<Category>(url, product, { headers })
-      .pipe(catchError(this.handleError));
+      .post<Category>(this.addCategoryUrl, category, { headers });
   }
 
-  deleteProduct(id: number): Observable<string> {
-    const url = `${this.deleteProductUrl}/${id}`;
+  updateCategory(category: Category): Observable<Category> {
     const headers = new HttpHeaders({ "Content-Type": "application/json" });
     return this.http
-      .delete<string>(url, { headers })
-      .pipe(catchError(this.handleError));
+      .put<Category>(this.updateCategoryUrl, category, { headers });
   }
 
-  //You can make any changes on data before return
-  private handleData(data: Category[]) {
-    // data[0].productCode='MyProduct';
-    // console.log(JSON.stringify(data));
+  deleteCategory(id: number): Observable<string> {
+    const url = `${this.deleteCategoryUrl}/${id}`;
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.http
+      .delete<string>(url, { headers });
   }
 
-  //catch error
-  private handleError(err: HttpErrorResponse) {
-    return throwError(err);
-  }
 }

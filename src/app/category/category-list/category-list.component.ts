@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Category} from '../model/Category'
+import { Category } from '../model/Category'
 import { CategoryService } from '../../services/category.service';
 import { AppConstatnts } from '../../utility/AppConstatnts';
 
@@ -11,130 +11,53 @@ import { AppConstatnts } from '../../utility/AppConstatnts';
 export class CategoryListComponent implements OnInit {
 
   pageTitle: string = AppConstatnts.categoryListPageTitle;
-  imageWidth: number = 50;
-  imageMargin: number = 2;
-  showImage: boolean = false;
-  showImageText: string = 'Show Image';
-  _filterByText: string;
-  filtedcategories: Category[];
-  items: Category[];
-  offset: number = 0;
-  size: number = 10;
-  previousBtn: string = 'disabled';
-  nextBtn: string = 'page-item';
+  categories: Category[];
+  allCategories: Category[];
+  activePage: number = 1;
+  totalRecords: number;
+  recordsPerPage: number = 10;
+  offset:number=0;
+  size:number=30;
 
-  constructor(private categoryService: CategoryService) {
-
-  }
-
-  set filterByText(filter: string) {
-    this._filterByText = filter;
-    this.filtedcategories = filter != null ? this.performFilter(this._filterByText) : this.items;
-  }
-
-  get filterByText(): string {
-    return this._filterByText;
-  }
-
-  performFilter(filterValue: string): Category[] {
-    return this.items.filter((category: Category) =>
-      category.categoryName.toLocaleLowerCase().indexOf(filterValue.toLocaleLowerCase()) != -1
-    );
-  }
-
+  constructor(private categoryService: CategoryService) { }
 
   ngOnInit() {
-    console.log("On Init Method");
-    this.displayPage(this.offset, this.size + 1, 'init');
-  }
-
-  toggleImage(): void {
-    this.showImage = !this.showImage;
-    if (this.showImage) {
-      this.showImageText = 'hide image';
-    } else {
-      this.showImageText = 'show image';
-    }
-  }
-
-  
-
-  previous() {
-    this.offset += -10;
-    this.displayPage(this.offset, this.size + 1, 'previous');
-  }
-
-  next() {
-    this.offset += +10;
-    this.displayPage(this.offset, this.size + 1, 'next');
-  }
-
-  displayPage(offset: number, size: number, type: string) {
-    this.categoryService.getcategories(offset, size).subscribe({
+    this.categoryService.getCategoriesCount().subscribe({
       next: (data) => {
-        if (type === 'init') {
-          this.handleDisplayInit(data);
-        } else if (type === 'next') {
-          this.handleDisplayDataNext(data);
-        } else if (type === 'previous') {
-          this.handleDisplayDataPrevious(data);
-        }
+        console.log(data);
+        this.totalRecords = data;
+      }
+    });
+    this.loadData();
+  }
+
+  displayActivePage(activePageNumber: number) {
+    this.activePage = activePageNumber
+    this.categories = this.allCategories.slice((activePageNumber - 1) * this.recordsPerPage, (activePageNumber) * this.recordsPerPage);
+  }
+
+  loadData() {
+    this.categoryService.getCategories(this.offset,this.size).subscribe({
+      next: (data) => {
+        this.allCategories = data;
+        this.categories = data.slice(this.activePage - 1, this.recordsPerPage);
+        this.activePage = 1;
       },
-      error: (err) => { console.log('Error' + err) },
+      error: (err) => this.handleError(err),
       complete: () => {
-        console.log('complete')
+        console.log('Load categories data completed')
       }
     });
   }
 
-  handleDisplayInit(data: Category[]) {
-    if (data.length < 11 && data.length > 1) {
-      this.items = data;
-      this.filtedcategories = this.items;
-    } else if (data.length == 11) {
-      data.pop();
-      this.items = data;
-      this.filtedcategories = this.items;
-    } else {
-      this.handleDisplayPaginatorButtons(true, true);
-    }
+  deleteCategory(id: number) {
+    this.categoryService.deleteCategory(id).subscribe({
+      next: () => { this.loadData() }
+    });
   }
 
-  handleDisplayDataNext(data: Category[]) {
-    if (data.length < 11 && data.length > 1) {
-      this.items = data;
-      this.filtedcategories = this.items;
-      this.handleDisplayPaginatorButtons(false, true);
-    } else if (data.length == 11) {
-      data.pop();
-      this.items = data;
-      this.filtedcategories = this.items;
-      this.handleDisplayPaginatorButtons(false, false);
-    } else {
-      this.handleDisplayPaginatorButtons(false, true);
-    }
-  }
-
-  handleDisplayDataPrevious(data: Category[]) {
-    if (data.length < 11 && data.length > 1) {
-      this.items = data;
-      this.filtedcategories = this.items;
-      this.handleDisplayPaginatorButtons(true, false);
-    } else if (data.length == 11) {
-      data.pop();
-      this.items = data;
-      this.filtedcategories = this.items;
-      this.handleDisplayPaginatorButtons(false, false);
-    } else {
-      this.handleDisplayPaginatorButtons(true, false);
-    }
-    if (this.offset == 0)
-      this.handleDisplayPaginatorButtons(true, false);
-  }
-
-  handleDisplayPaginatorButtons(previousBtnDisable: boolean, nextBtnDisable: boolean) {
-    this.nextBtn = nextBtnDisable == true ? 'disabled' : 'page-item';
-    this.previousBtn = previousBtnDisable == true ? 'disabled' : 'page-item';
+  handleError(error: any) {
+    console.log('Error happend while loading categories data' + JSON.stringify(error));
   }
 
 }
