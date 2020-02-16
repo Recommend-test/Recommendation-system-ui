@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy, ElementRef, AfterViewInit, ViewChildren } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChildren } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControlName } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Category } from '../model/Category';
+
 import { Subscription, Observable, fromEvent, merge } from 'rxjs';
 import { GenericValidator } from '../../shared/GenericValidator';
 import { debounceTime } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
+import { Category } from 'src/app/model/Category';
 
 
 @Component({
@@ -23,14 +24,11 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
   errorMessage: string;
   deleteBtnDisabled: boolean;
   showId: boolean = false;
-
-  // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
   constructor(private fb: FormBuilder, private acRoute: ActivatedRoute, private categoryService: CategoryService, private router: Router) {
-
     this.validationMessages = {
       categoryName: {
         required: 'Category name is required.',
@@ -38,10 +36,8 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
         maxlength: 'Category name cannot exceed 100 characters.'
       }
     };
-
     this.genericValidator = new GenericValidator(this.validationMessages);
   }
-
 
   ngOnInit() {
     this.categoryForm = this.fb.group({
@@ -76,7 +72,7 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
     // Merge the blur event observable with the valueChanges observable
     // so we only need to subscribe once.
     merge(this.categoryForm.valueChanges, ...controlBlurs).pipe(
-      debounceTime(800)
+      debounceTime(400)
     ).subscribe(value => {
       this.displayMessage = this.genericValidator.processMessages(this.categoryForm);
     });
@@ -96,21 +92,24 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
       let category: Category = null;
       if (this.category != null) {
         category = { ...this.category, ...this.categoryForm.value };
+        this.categoryService.updateCategory(category).subscribe(
+          {
+            next: (data) => { this.updateComplete() }
+          }
+        );
       } else {
         category = this.categoryForm.value;
+        this.categoryService.addCategory(category).subscribe(
+          {
+            next: (data) => { this.updateComplete() }
+          }
+        );
       }
 
-      this.categoryService.updateCategory(category).subscribe(
-        {
-          next: (data) => { this.updateComplete() }
-        }
-      );
     } else {
       this.errorMessage = 'please enter data';
     }
-
   }
-
 
   displayCategory(category: Category): void {
     if (this.categoryForm) {
@@ -130,6 +129,6 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/categories']);
   }
 
-  
+
 }
 

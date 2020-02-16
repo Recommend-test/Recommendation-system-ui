@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { Category } from '../category/model/Category'
+import { Category } from '../model/Category'
 import { tap, catchError } from 'rxjs/operators';
+import { CategoryListResponse } from '../model/CategoryListResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  private categoriesUrl = "http://localhost:8082/api/v1/categories";
-  private categoriesCountUrl = "http://localhost:8082/api/v1/categories/count";
+  private categoriesUrl = "http://localhost:8082/api/v1/categories/page";
   private categoryIdUrl = "http://localhost:8082/api/v1/categories/";
   private updateCategoryUrl = "http://localhost:8082/api/v1/categories";
   private addCategoryUrl = "http://localhost:8082/api/v1/categories";
@@ -20,15 +20,16 @@ export class CategoryService {
   constructor(private http: HttpClient) { }
 
   //TODO : get categories in range.
-  getCategories(offset: number, size: number): Observable<Category[]> {
+  getCategories(offset: number, size: number): Observable<CategoryListResponse> {
+    console.log('offset'+ offset+ ' limit'+size);
+    const params = new HttpParams().
+    set('offset', offset.toString()).
+    set('limit',size.toString());
     return this.http
-      .get<Category[]>(this.categoriesUrl);
+      .get<CategoryListResponse>(this.categoriesUrl,{params:params});
   }
 
-  getCategoriesCount(): Observable<number> {
-    return this.http
-      .get<number>(this.categoriesCountUrl);
-  }
+  
   getCategoryById(id: string): Observable<Category> {
     const url = `${this.categoryIdUrl}/${id}`;
     return this.http.get<Category>(url);

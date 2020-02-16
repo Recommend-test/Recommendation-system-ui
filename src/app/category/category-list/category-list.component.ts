@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Category } from '../model/Category'
 import { CategoryService } from '../../services/category.service';
 import { AppConstatnts } from '../../utility/AppConstatnts';
+import { Category } from 'src/app/model/Category';
+import { Paginator } from 'src/app/model/Paginator';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-category-list',
@@ -16,32 +18,63 @@ export class CategoryListComponent implements OnInit {
   activePage: number = 1;
   totalRecords: number;
   recordsPerPage: number = 10;
-  offset:number=0;
-  size:number=30;
+  offset: number = 0;
+  size: number = 30;
+  nextCounter = 0;
+  previousCounter = 0;
+  cachedPagesSize = 3;
+  start = 0;
+  end = this.recordsPerPage;
 
   constructor(private categoryService: CategoryService) { }
 
   ngOnInit() {
-    this.categoryService.getCategoriesCount().subscribe({
-      next: (data) => {
-        console.log(data);
-        this.totalRecords = data;
+    this.loadData(this.offset, this.size);
+    this.nextCounter = this.recordsPerPage;
+    this.previousCounter = this.recordsPerPage;
+    this.activePage = 1;
+  }
+
+
+  displayActivePage(activePage: Paginator) {
+    this.activePage = activePage.page;
+    this.handleArrayChunck();
+    if (activePage.type === 'next') {
+      if (this.activePage % this.cachedPagesSize == 1) {
+        this.offset += 1;
+        this.loadData(this.offset, this.size);
+      } else {
+        this.categories = this.allCategories.slice(this.start, this.end);
       }
-    });
-    this.loadData();
+    } else if (activePage.type === 'previous') {
+      if (this.activePage % this.cachedPagesSize == 0) {
+        this.offset -= 1;
+        this.loadData(this.offset, this.size);
+      } else {
+        this.categories = this.allCategories.slice(this.start, this.end);
+      }
+
+    }
+
   }
 
-  displayActivePage(activePageNumber: number) {
-    this.activePage = activePageNumber
-    this.categories = this.allCategories.slice((activePageNumber - 1) * this.recordsPerPage, (activePageNumber) * this.recordsPerPage);
+  
+  compare(cat1, cat2) {
+    let comparison = 0;
+    if (cat1.id > cat2.id) {
+      comparison = 1;
+    } else if (cat1.id < cat2.id) {
+      comparison = -1;
+    }
+    return comparison;
   }
 
-  loadData() {
-    this.categoryService.getCategories(this.offset,this.size).subscribe({
+  loadData(offset: number, size: number) {
+    this.categoryService.getCategories(offset, size).subscribe({
       next: (data) => {
-        this.allCategories = data;
-        this.categories = data.slice(this.activePage - 1, this.recordsPerPage);
-        this.activePage = 1;
+        this.allCategories = data.productCategoryList;
+        this.categories = this.allCategories.slice(this.start, this.end);
+        this.totalRecords = data.totalCount;
       },
       error: (err) => this.handleError(err),
       complete: () => {
@@ -52,7 +85,7 @@ export class CategoryListComponent implements OnInit {
 
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
-      next: () => { this.loadData() }
+      next: () => { this.loadData(this.offset, this.size) }
     });
   }
 
@@ -60,4 +93,16 @@ export class CategoryListComponent implements OnInit {
     console.log('Error happend while loading categories data' + JSON.stringify(error));
   }
 
+  handleArrayChunck() {
+    if (this.activePage % this.cachedPagesSize == 1) {
+      this.start = 0;
+      this.end = this.recordsPerPage;
+    } else if (this.activePage % this.cachedPagesSize == 2) {
+      this.start = this.recordsPerPage;
+      this.end = this.recordsPerPage * 2;
+    } else if (this.activePage % this.cachedPagesSize == 0) {
+      this.start = this.recordsPerPage * 2;
+      this.end = this.recordsPerPage * 3;
+    }
+  }
 }

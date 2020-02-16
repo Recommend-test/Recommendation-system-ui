@@ -1,8 +1,8 @@
 <nav aria-label="page navigation example">
   <ul class="pagination">
     <li class="page-item" [ngClass]="activePage===1?dsiabledProperty:enabledProperty"
-      (click)="onClickPage(activePage - 1)"><a class="page-link" href="javascript:void(0);">Previous</a></li>
-    <li class="page-item" [ngClass]="totalRecords<=recordsPerPage*activePage?dsiabledProperty:enabledProperty"
-      (click)="onClickPage(activePage + 1)"><a class="page-link" href="javascript:void(0);">Next</a></li>
+      (click)="onClickPage({page: (activePage - 1),type:'previous'})"><a class="page-link" href="javascript:void(0);">Previous</a></li>
+    <li class="page-item" [ngClass]="actualTotalRecords<=perPage*activePage?dsiabledProperty:enabledProperty"
+      (click)="onClickPage({page:(activePage + 1),type:'next'})"><a class="page-link" href="javascript:void(0);">Next</a></li>
   </ul>
 </nav>
