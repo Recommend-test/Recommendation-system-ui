@@ -14,7 +14,7 @@ export class CategoryService {
   private categoryIdUrl = "http://localhost:8082/api/v1/categories/";
   private updateCategoryUrl = "http://localhost:8082/api/v1/categories";
   private addCategoryUrl = "http://localhost:8082/api/v1/categories";
-  private deleteCategoryUrl = "http://localhost:8082/api/v1/categories/";
+  private deleteCategoryUrl = "http://localhost:8082/api/v1/categories";
 
 
   /**
@@ -54,7 +54,7 @@ export class CategoryService {
     return this.http.get<Category>(url);
   }
 
-  
+
   /**
    * This method used to add category.
    *
@@ -82,6 +82,14 @@ export class CategoryService {
       .put<Category>(this.updateCategoryUrl, category, { headers });
   }
 
+
+  /**
+   *
+   * This method used to delete category by id.
+   * @param {number} id
+   * @returns {Observable<string>}
+   * @memberof CategoryService
+   */
   deleteCategory(id: number): Observable<string> {
     const url = `${this.deleteCategoryUrl}/${id}`;
     const headers = new HttpHeaders({ "Content-Type": "application/json" });

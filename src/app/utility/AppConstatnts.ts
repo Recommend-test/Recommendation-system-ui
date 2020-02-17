@@ -9,4 +9,5 @@ export class AppConstatnts {
     public static loseData = 'Navigate away will lose all data';
     public static next='next';
     public static previous='previous';
+    public static deleteCatConfirmationMessage='Are you sure to delete this category?';
 }

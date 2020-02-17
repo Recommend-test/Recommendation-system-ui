@@ -104,9 +104,12 @@ export class CategoryListComponent implements OnInit {
    * @memberof CategoryListComponent
    */
   deleteCategory(id: number) {
-    this.categoryService.deleteCategory(id).subscribe({
-      next: () => { this.loadData(this.offset, this.size) }
-    });
+    if (confirm(AppConstatnts.deleteCatConfirmationMessage)) {
+      console.log('confirmed');
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => { this.loadData(this.offset, this.size) }
+      });
+    }
   }
 
 
