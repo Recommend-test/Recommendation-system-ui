@@ -3,7 +3,6 @@ import { CategoryService } from '../../services/category.service';
 import { AppConstatnts } from '../../utility/AppConstatnts';
 import { Category } from 'src/app/model/Category';
 import { Paginator } from 'src/app/model/Paginator';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-category-list',
@@ -15,60 +14,74 @@ export class CategoryListComponent implements OnInit {
   pageTitle: string = AppConstatnts.categoryListPageTitle;
   categories: Category[];
   allCategories: Category[];
-  activePage: number = 1;
+  activePage: number;
   totalRecords: number;
-  recordsPerPage: number = 10;
-  offset: number = 0;
-  size: number = 30;
-  nextCounter = 0;
-  previousCounter = 0;
-  cachedPagesSize = 3;
-  start = 0;
-  end = this.recordsPerPage;
+  recordsPerPage: number;
+  offset: number;
+  size: number;
+  cachedPagesSize: number;
+  start: number;
+  end: number;
 
+
+  /**
+   * Used to create instance from CategoryService.
+   * @param {CategoryService} categoryService
+   * @memberof CategoryListComponent
+   */
   constructor(private categoryService: CategoryService) { }
 
+
+  /**
+   * This method used to init variables and load category list data.
+   * @memberof CategoryListComponent
+   */
   ngOnInit() {
-    this.loadData(this.offset, this.size);
-    this.nextCounter = this.recordsPerPage;
-    this.previousCounter = this.recordsPerPage;
     this.activePage = 1;
+    this.recordsPerPage = 10;
+    this.offset = 0
+    this.size = 30;
+    this.cachedPagesSize = 3;
+    this.start = 0;
+    this.end = this.recordsPerPage;
+    this.loadData(this.offset, this.size);
   }
 
 
+  /**
+   * This method used to handle pagination between pages.
+   *
+   * @param {Paginator} activePage contain page number and type (next,previous)
+   * @memberof CategoryListComponent
+   */
   displayActivePage(activePage: Paginator) {
     this.activePage = activePage.page;
     this.handleArrayChunck();
-    if (activePage.type === 'next') {
+    if (activePage.type === AppConstatnts.next) {
       if (this.activePage % this.cachedPagesSize == 1) {
         this.offset += 1;
         this.loadData(this.offset, this.size);
       } else {
         this.categories = this.allCategories.slice(this.start, this.end);
       }
-    } else if (activePage.type === 'previous') {
+    } else if (activePage.type === AppConstatnts.previous) {
       if (this.activePage % this.cachedPagesSize == 0) {
         this.offset -= 1;
         this.loadData(this.offset, this.size);
       } else {
         this.categories = this.allCategories.slice(this.start, this.end);
       }
-
     }
-
   }
 
-  
-  compare(cat1, cat2) {
-    let comparison = 0;
-    if (cat1.id > cat2.id) {
-      comparison = 1;
-    } else if (cat1.id < cat2.id) {
-      comparison = -1;
-    }
-    return comparison;
-  }
 
+  /**
+   * This method used to load categories based on offset and size.
+   *
+   * @param {number} offset Refer to page number.
+   * @param {number} size Refer to number of records per page.
+   * @memberof CategoryListComponent
+   */
   loadData(offset: number, size: number) {
     this.categoryService.getCategories(offset, size).subscribe({
       next: (data) => {
@@ -83,16 +96,25 @@ export class CategoryListComponent implements OnInit {
     });
   }
 
+
+  /**
+   * This method used to delete category by id.
+   *
+   * @param {number} id The id of category.
+   * @memberof CategoryListComponent
+   */
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
       next: () => { this.loadData(this.offset, this.size) }
     });
   }
 
-  handleError(error: any) {
-    console.log('Error happend while loading categories data' + JSON.stringify(error));
-  }
 
+  /**
+   * This method used to determine start and end to use them to get chunk of allCategories list.
+   *
+   * @memberof CategoryListComponent
+   */
   handleArrayChunck() {
     if (this.activePage % this.cachedPagesSize == 1) {
       this.start = 0;
@@ -104,5 +126,14 @@ export class CategoryListComponent implements OnInit {
       this.start = this.recordsPerPage * 2;
       this.end = this.recordsPerPage * 3;
     }
+  }
+
+  /**
+   * This method used to log error if it happend while loading data.
+   * @param {*} error
+   * @memberof CategoryListComponent
+   */
+  handleError(error: any) {
+    console.log('Error happend while loading categories data' + JSON.stringify(error));
   }
 }

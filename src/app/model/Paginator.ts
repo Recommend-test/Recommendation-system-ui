@@ -1,4 +1,4 @@
-export class Paginator{
-    page:number;
-    type:string;
+export class Paginator {
+    page: number;
+    type: string;
 }
