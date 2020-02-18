@@ -42,6 +42,6 @@
         </form>
     </div>
 
-    <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}
-    </div>
+    
+    <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
 </div>

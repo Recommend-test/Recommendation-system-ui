@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { ConvertToSpacePipe } from './ConvertToSpacePipe';
 
 import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 
 
 
 @NgModule({
   declarations: [
     ConvertToSpacePipe,
-    CustomPaginatorComponent
+    CustomPaginatorComponent,
+    ErrorMessageComponent
   ],
   imports: [
     CommonModule
@@ -19,7 +21,8 @@ import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.co
     CommonModule,
     FormsModule,
     ConvertToSpacePipe,
-    CustomPaginatorComponent
+    CustomPaginatorComponent,
+    ErrorMessageComponent
   ]
 })
 export class SharedModule { }

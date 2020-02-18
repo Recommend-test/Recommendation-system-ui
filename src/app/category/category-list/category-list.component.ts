@@ -22,6 +22,7 @@ export class CategoryListComponent implements OnInit {
   cachedPagesSize: number;
   start: number;
   end: number;
+  errorMessage: string;
 
 
   /**
@@ -107,7 +108,8 @@ export class CategoryListComponent implements OnInit {
     if (confirm(AppConstatnts.deleteCatConfirmationMessage)) {
       console.log('confirmed');
       this.categoryService.deleteCategory(id).subscribe({
-        next: () => { this.loadData(this.offset, this.size) }
+        next: () => { this.loadData(this.offset, this.size) },
+        error: (error) => { this.errorMessage = error.error.error }
       });
     }
   }
@@ -138,5 +140,15 @@ export class CategoryListComponent implements OnInit {
    */
   handleError(error: any) {
     console.log('Error happend while loading categories data' + JSON.stringify(error));
+  }
+
+
+  /**
+   * This method used to close the error message.
+   *
+   * @memberof CategoryListComponent
+   */
+  closeErrorMessage() {
+    this.errorMessage = null;
   }
 }

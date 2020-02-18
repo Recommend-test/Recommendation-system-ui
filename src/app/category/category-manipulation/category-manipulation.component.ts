@@ -187,5 +187,13 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
     this.errorMessage = error.error.error;
   }
 
+  /**
+   * This method used to close the error message.
+   *
+   * @memberof CategoryListComponent
+   */
+  closeErrorMessage() {
+    this.errorMessage = null;
+  }
 }
 

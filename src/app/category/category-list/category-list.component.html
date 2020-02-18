@@ -10,6 +10,10 @@
       </button>
     </div>
 
+   
+
+    <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
+
     <div class='table-responsive'>
       <table class='table' *ngIf='categories && categories.length'>
         <thead>
