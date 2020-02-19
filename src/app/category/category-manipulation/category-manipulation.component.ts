@@ -62,10 +62,12 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
       Validators.minLength(3),
       Validators.maxLength(100)]]
     });
-
+console.log(this.acRoute);
     this.acRoute.paramMap.subscribe(
       params => {
+        
         let id = params.get(AppConstatnts.id);
+        console.log(id);
         if (id === AppConstatnts.zero) {
           this.deleteBtnDisabled = true;
           this.pageTitle = AppConstatnts.addCategory;
@@ -133,6 +135,7 @@ export class CategoryManipulationComponent implements OnInit, AfterViewInit {
           }
         );
       } else {
+        console.log('in add category ...');
         category = this.categoryForm.value;
         this.categoryService.addCategory(category).subscribe(
           {

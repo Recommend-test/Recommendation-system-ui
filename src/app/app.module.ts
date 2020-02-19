@@ -12,6 +12,7 @@ import { ProductModule } from "./product/product.module";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CategoryModule} from "./category/category.module"
+import { CategoryService } from './services/category.service';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { CategoryModule} from "./category/category.module"
     ReactiveFormsModule,
     CategoryModule
   ],
-  providers: [],
+  providers: [CategoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
