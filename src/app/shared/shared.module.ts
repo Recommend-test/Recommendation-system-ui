@@ -6,6 +6,10 @@ import { ConvertToSpacePipe } from './ConvertToSpacePipe';
 import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 
+import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+
 
 
 @NgModule({
@@ -15,9 +19,12 @@ import { ErrorMessageComponent } from './error-message/error-message.component';
     ErrorMessageComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    AutocompleteLibModule,
+    NgbModule,
+    FormsModule
   ],
-  exports:[
+  exports: [
     CommonModule,
     FormsModule,
     ConvertToSpacePipe,

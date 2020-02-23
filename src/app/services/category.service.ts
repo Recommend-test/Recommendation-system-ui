@@ -92,4 +92,15 @@ export class CategoryService {
       .delete<string>(url, { headers });
   }
 
+    /**
+   * This method used to load all categories.
+   *
+   * @returns {Observable<Category[]>}
+   * @memberof CategoryService
+   */
+  getAllCategories(): Observable<Category[]> {
+    
+    return this.http
+      .get<Category[]>(this.baseUrl);
+  }
 }

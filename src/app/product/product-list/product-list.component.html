@@ -5,36 +5,56 @@
   <div class='card-body'>
 
     <div class='clearfix'>
-      <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/product/0/edit']">
-        Add Product
+      <button class="btn btn-primary btn-sm pull-right">
+        <i class="fa fa-plus" aria-hidden="true"></i> Add Product
       </button>
     </div>
 
+
+
+    <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
+
+
+    <ng-template #rt let-r="result" let-t="term">
+      <ngb-highlight [result]="r.categoryName" [term]="t"></ngb-highlight>
+    </ng-template>
+
+    <label style="color: #007bff" for="typeahead-template">Search for a category:</label>
+    <input id="typeahead-template" type="text" class="form-control" [ngbTypeahead]="search"
+      (selectItem)="onSelectCategory($event)" [resultTemplate]="rt" [inputFormatter]="formatter" />
+
     <div class='table-responsive'>
-      <table class='table' *ngIf='items && items.length'>
+      <table class='table' *ngIf='products && products.length'>
         <thead>
           <tr>
-            <th>Product</th>
-            <th>Code</th>
-            <th>Edit</th>
+            <th>Product id</th>
+            <th> Product name</th>
+            <th> Product Description</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let product of filtedProducts' [routerLink]="['/productsDetails',product.productId]">
+          <tr *ngFor='let product of products'>
+            <td>{{product.id}}</td>
             <td>{{product.productName}}</td>
-            <td>{{product.productCode|lowercase|convertToSpace:'-'}}</td>
+            <td>{{product.productDescription}}</td>
             <td>
-              <button class="btn btn-outline-primary btn-sm" [routerLink]="['/product', product.productId, 'edit']">
-                Edit
+              <button class="btn btn-outline-primary btn-sm" style="margin:5px;"
+                >
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+              <button class="btn btn-outline-primary btn-sm" >
+                <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </td>
+
           </tr>
         </tbody>
 
       </table>
 
-      
-
+      <custom-paginator *ngIf='products && products.length' [activePage]="activePage" [perPage]="recordsPerPage"
+        [actualTotalRecords]="totalRecords" (onPageChange)="displayActivePage($event)"></custom-paginator>
     </div>
   </div>
 </div>

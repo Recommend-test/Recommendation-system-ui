@@ -13,6 +13,7 @@ import { ProductModule } from "./product/product.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CategoryModule} from "./category/category.module"
 import { CategoryService } from './services/category.service';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { CategoryService } from './services/category.service';
     HttpClientModule,
     ProductModule,
     ReactiveFormsModule,
-    CategoryModule
+    CategoryModule,
+    NgbModule
   ],
   providers: [CategoryService],
   bootstrap: [AppComponent]
