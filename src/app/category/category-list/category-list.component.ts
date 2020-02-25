@@ -66,7 +66,7 @@ export class CategoryListComponent implements OnInit {
     if (activePage.type === AppConstatnts.next) {
       this.start = this.end;
       this.end += this.recordsPerPage;
-      if (this.activePage % this.cachedPagesCount == 1) {
+      if (this.activePage % this.cachedPagesCount == 1 || this.recordsPerPage ===  this.size) {
         this.offset += 1;
         this.loadDataForNext(this.offset, this.size);
         this.categories = this.allCategories.slice(this.start, this.end);
@@ -77,7 +77,7 @@ export class CategoryListComponent implements OnInit {
     else if (activePage.type === AppConstatnts.previous) {
       this.start-=this.recordsPerPage;
       this.end-=this.recordsPerPage;
-      if (this.activePage % this.cachedPagesCount == 0) {
+      if (this.activePage % this.cachedPagesCount == 0 || this.recordsPerPage ===  this.size) {
         this.offset -= 1;
         this.loadDataForPrevious(this.offset, this.size);
       } else {
