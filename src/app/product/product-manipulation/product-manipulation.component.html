@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+        {{pageTitle}}
+    </div>
+
+    <div class="card-body">
+        <form novalidate [formGroup]="productForm">
+
+            <div class="form-group row mb-2" *ngIf="showId">
+                <label class="col-md-2 col-form-label" for="productId">Product Id</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" id="productId" disabled=true type="text" formControlName="id" />
+
+                </div>
+            </div>
+
+            <div class="form-group row mb-2">
+                <label class="col-md-2 col-form-label" for="productNameId">Product Name</label>
+                <div class="col-md-8">
+                    <input class="form-control" id="productNameId" type="text" placeholder="Name (required)"
+                        formControlName="productName" [ngClass]="{'is-invalid': displayMessage.productName }" />
+                    <span class="invalid-feedback">
+                        {{displayMessage.productName}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group row mb-2">
+                <label class="col-md-2 col-form-label" for="productDescId">Product Description</label>
+                <div class="col-md-8">
+                    <input class="form-control" id="productDescId" type="text" placeholder="Description (required)"
+                        formControlName="productDescription" [ngClass]="{'is-invalid': displayMessage.productDescription }" />
+                    <span class="invalid-feedback">
+                        {{displayMessage.productDescription}}
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-group row mb-2">
+                <div class="offset-md-2 col-md-4">
+                    <button class="btn btn-primary mr-3" style="width:80px;" type="submit" (click)="updateProduct()">
+                        Save
+                    </button>
+                    <button class="btn btn-outline-secondary mr-3" style="width:80px;" type="button"
+                        title="Cancel your edits" [routerLink]="['/products']">
+                        Cancel
+                    </button>
+                   
+                </div>
+            </div>
+        </form>
+    </div>
+
+    
+    <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
+</div>

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Paginator } from 'src/app/model/Paginator';
 import { Product } from 'src/app/model/Product';
 import { ProductService } from 'src/app/services/productservice.service';
-import { AppConstatnts } from 'src/app/utility/AppConstatnts';
+import { AppConstatnts } from 'src/app/utility/AppConstants';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/model/Category';
+import { ProductDataService } from '../data-service/ProductsDataService';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class ProductListComponent implements OnInit {
   errorMessage: string;
   allCategories: Category[];
   categoryId: number;
+  showAddButton:boolean;
 
 
 
@@ -38,7 +40,7 @@ export class ProductListComponent implements OnInit {
    * @param {productService} productService
    * @memberof ProductListComponent
    */
-  constructor(private productService: ProductService, private categoryService: CategoryService) { }
+  constructor(private productService: ProductService, private categoryService: CategoryService, private productDataService:ProductDataService ) { }
 
 
   /**
@@ -53,6 +55,7 @@ export class ProductListComponent implements OnInit {
     this.cachedPagesSize = 3;
     this.start = 0;
     this.end = this.recordsPerPage;
+    this.showAddButton=true;
     this.loadAllCategoriesData();
   }
 
@@ -143,6 +146,29 @@ export class ProductListComponent implements OnInit {
     }
   }
 
+   /**
+   * This method used to delete product by id.
+   *
+   * @param {number} id The id of product.
+   * @memberof ProductListComponent
+   */
+  deleteProduct(id: number) {
+    if (confirm(AppConstatnts.deleteProductConfirmationMessage)) {
+      console.log('confirmed');
+      this.productService.deleteProduct(id).subscribe({
+        next: () => { this.loadData(this.categoryId,this.offset, this.size) },
+        error: (error) => { this.errorMessage = error.error.error }
+      });
+    }
+  }
+
+
+  setSharedData(product:Product){
+   this.productDataService.updateProduct(product);
+   this.productDataService.updateCategoryId(this.categoryId);
+  }
+
+
   /**
    * This method used to log error if it happend while loading data.
    * @param {*} error
@@ -183,7 +209,8 @@ export class ProductListComponent implements OnInit {
   onSelectCategory(selectedItem: any) {
     this.categoryId = selectedItem.item.id;
     this.loadData(this.categoryId, this.offset, this.size);
-
+    this.productDataService.updateCategoryId(this.categoryId);
+    this.showAddButton=false;
   }
 
 

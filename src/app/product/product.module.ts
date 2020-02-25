@@ -8,12 +8,14 @@ import { SharedModule } from '../shared/shared.module';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductService } from '../services/productservice.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProductManipulationComponent } from './product-manipulation/product-manipulation.component';
 
 
 
 @NgModule({
   declarations: [
-    ProductListComponent
+    ProductListComponent,
+    ProductManipulationComponent
 
   ],
   imports: [
