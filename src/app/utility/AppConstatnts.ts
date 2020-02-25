@@ -10,4 +10,5 @@ export class AppConstatnts {
     public static next='next';
     public static previous='previous';
     public static deleteCatConfirmationMessage='Are you sure to delete this category?';
+    public static userActionPageTitle='User Action List';
 }

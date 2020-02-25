@@ -1,0 +1,51 @@
+<div class='card'>
+    <div class='card-header'>
+      {{pageTitle}}
+    </div>
+    <div class='card-body'>
+  
+      <div class='clearfix'>
+        <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/userActions', 0]">
+          <i class="fa fa-plus" aria-hidden="true"></i> Add User Action
+        </button>
+      </div>
+  
+     
+  
+      <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
+  
+      <div class='table-responsive'>
+        <table class='table' *ngIf='userActions && userActions.length'>
+          <thead>
+            <tr>
+              <th> Action Id </th>
+              <th> Action Name </th>
+              <th> weight </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor='let userAction of userActions'>
+              <td>{{userAction.id}}</td>
+              <td>{{userAction.actionName}}</td>
+              <td>{{userAction.weight}}</td>
+              <td>
+                <button class="btn btn-outline-primary btn-sm" style="margin:5px;"
+                  [routerLink]="['/userActions', userAction.id]">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+  
+                <button class="btn btn-outline-primary btn-sm" (click)="deleteUserAction(userAction.id)">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+              </td>
+  
+            </tr>
+          </tbody>
+  
+        </table>
+  
+        <custom-paginator [activePage]="activePage" [perPage]="recordsPerPage" [actualTotalRecords]="totalRecords"
+          (onPageChange)="displayActivePage($event)"></custom-paginator>
+      </div>
+    </div>
+  </div>

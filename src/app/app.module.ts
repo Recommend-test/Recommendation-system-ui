@@ -13,7 +13,11 @@ import { ProductModule } from "./product/product.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CategoryModule} from "./category/category.module"
 import { CategoryService } from './services/category.service';
+import { ConfigurationModule } from "./configuration/configuration.module";
+
+
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { UserActionService } from './services/userAction.service';
 
 
 @NgModule({
@@ -26,9 +30,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     ProductModule,
     ReactiveFormsModule,
     CategoryModule,
+    ConfigurationModule,
     NgbModule
   ],
-  providers: [CategoryService],
+  providers: [CategoryService, UserActionService],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
