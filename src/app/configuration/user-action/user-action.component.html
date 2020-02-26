@@ -5,7 +5,7 @@
     <div class='card-body'>
   
       <div class='clearfix'>
-        <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/userActions', 0]">
+        <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/configuration', 0]">
           <i class="fa fa-plus" aria-hidden="true"></i> Add User Action
         </button>
       </div>
@@ -30,7 +30,7 @@
               <td>{{userAction.weight}}</td>
               <td>
                 <button class="btn btn-outline-primary btn-sm" style="margin:5px;"
-                  [routerLink]="['/userActions', userAction.id]">
+                  [routerLink]="['/configuration', userAction.id]">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </button>
   

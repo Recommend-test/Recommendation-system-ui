@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanDeactivate } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanDeactivate } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CategoryManipulationComponent } from '../category-manipulation/category-manipulation.component';
-import { AppConstatnts } from 'src/app/utility/AppConstatnts';
+import { AppConstants } from 'src/app/utility/AppConstants';
 
 
 @Injectable({
@@ -23,7 +23,7 @@ export class CategoryManipulationGuard implements CanDeactivate<CategoryManipula
    */
   canDeactivate(component: CategoryManipulationComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     if (component.categoryForm.dirty) {
-      return confirm(AppConstatnts.loseData);
+      return confirm(AppConstants.loseData);
     }
     return true;
   }

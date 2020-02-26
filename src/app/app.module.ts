@@ -33,8 +33,6 @@ import { UserActionService } from './services/userAction.service';
     ConfigurationModule,
     NgbModule
   ],
-  providers: [CategoryService, UserActionService],
-
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,7 +6,7 @@ import { GenericValidator } from '../../shared/GenericValidator';
 import { debounceTime } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/model/Category';
-import { AppConstatnts } from '../../utility/AppConstatnts';
+import { AppConstants } from 'src/app/utility/AppConstants';
 
 
 @Component({
@@ -17,7 +17,7 @@ import { AppConstatnts } from '../../utility/AppConstatnts';
 export class CategoryManipulationComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
-  pageTitle: string = AppConstatnts.editCategoryPageTitle;
+  pageTitle: string = AppConstants.editCategoryPageTitle;
   sub: Subscription;
   category: Category;
   categoryForm: FormGroup;
@@ -66,11 +66,11 @@ console.log(this.acRoute);
     this.acRoute.paramMap.subscribe(
       params => {
         
-        let id = params.get(AppConstatnts.id);
+        let id = params.get(AppConstants.id);
         console.log(id);
-        if (id === AppConstatnts.zero) {
+        if (id === AppConstants.zero) {
           this.deleteBtnDisabled = true;
-          this.pageTitle = AppConstatnts.addCategory;
+          this.pageTitle = AppConstants.addCategory;
         } else {
           this.showId = true;
           this.deleteBtnDisabled = false;
@@ -146,7 +146,7 @@ console.log(this.acRoute);
       }
 
     } else {
-      this.errorMessage = AppConstatnts.enterDataError;
+      this.errorMessage = AppConstants.enterDataError;
     }
   }
 

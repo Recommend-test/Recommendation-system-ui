@@ -6,9 +6,10 @@ import { AppRoutingModule } from '../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UserActionComponent } from './user-action/user-action.component';
+import { UserActionManipulationComponent } from './user-action-manipulation/user-action-manipulation.component';
 
 @NgModule({
-  declarations: [UserActionComponent],
+  declarations: [UserActionComponent, UserActionManipulationComponent],
   imports: [
     CommonModule,
     BrowserModule,

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AppConstatnts } from 'src/app/utility/AppConstatnts';
 import { UserActionWeight } from 'src/app/model/UserActionWeight';
 import { UserActionService } from 'src/app/services/userAction.service';
+import { Paginator } from 'src/app/model/Paginator';
+import { AppConstants } from 'src/app/utility/AppConstants';
 
 @Component({
   selector: 'app-user-action',
@@ -11,7 +12,7 @@ import { UserActionService } from 'src/app/services/userAction.service';
 
 export class UserActionComponent implements OnInit {
 
-  pageTitle : string = AppConstatnts.userActionPageTitle;
+  pageTitle : string = AppConstants.userActionPageTitle;
   userActions: UserActionWeight[];
   allUserActions: UserActionWeight[];
   activePage: number;
@@ -19,7 +20,7 @@ export class UserActionComponent implements OnInit {
   recordsPerPage: number;
   offset: number;
   size: number;
-  cachedPagesSize: number;
+  cachedPagesCount: number;
   start: number;
   end: number;
   errorMessage: string;
@@ -30,29 +31,44 @@ export class UserActionComponent implements OnInit {
     this.activePage = 1;
     this.recordsPerPage = 5;
     this.offset = 0
-    this.size = 7;
-    this.cachedPagesSize = 3;
+    this.size = 5;
+    this.cachedPagesCount = this.size/this.recordsPerPage ;
     this.start = 0;
     this.end = this.recordsPerPage;
-    this.loadData(this.offset, this.size);
+    this.loadDataForNext(this.offset, this.size);
   }
 
-    /**
-   * This method used to load categories based on offset and size.
-   *
-   * @param {number} offset Refer to page number.
-   * @param {number} size Refer to number of records per page.
-   * @memberof CategoryListComponent
-   */
-  loadData(offset : number , size : number) {
+  displayActivePage(activePage: Paginator) {
+    this.activePage = activePage.page;
+    if (activePage.type === AppConstants.next) {
+      this.start = this.end;
+      this.end += this.recordsPerPage;
+      if (this.activePage % this.cachedPagesCount == 1 || this.recordsPerPage ===  this.size) {
+        this.offset += 1;
+        this.loadDataForNext(this.offset, this.size);
+        this.userActions = this.allUserActions.slice(this.start, this.end);
+      } else {
+        this.userActions = this.allUserActions.slice(this.start, this.end);
+      }
+    }
+    else if (activePage.type === AppConstants.previous) {
+      this.start-=this.recordsPerPage;
+      this.end-=this.recordsPerPage;
+      if (this.activePage % this.cachedPagesCount == 0 || this.recordsPerPage ===  this.size) {
+        this.offset -= 1;
+        this.loadDataForPrevious(this.offset, this.size);
+      } else {
+        this.userActions = this.allUserActions.slice(this.start, this.end);
+      }
+    }
+  }
+
+  loadDataForNext(offset : number , size : number) {
     this.userActionService.getActionsPage(offset, size).subscribe({
       next: (data) => {      
         this.allUserActions = data.userActionList;
-
-        console.log(this.allUserActions);
-
-        console.log(data);
-
+        this.start = 0;
+        this.end = this.recordsPerPage;
         this.userActions = this.allUserActions.slice(this.start, this.end);
         this.totalRecords = data.totalCount;
       },
@@ -63,13 +79,50 @@ export class UserActionComponent implements OnInit {
     });
   }
 
-    /**
-   * This method used to log error if it happend while loading data.
-   * @param {*} error
-   * @memberof CategoryListComponent
-   */
-  handleError(error: any) {
-    console.log('Error happend while loading categories data' + JSON.stringify(error));
+  loadDataForPrevious(offset : number , size : number) {
+    this.userActionService.getActionsPage(offset, size).subscribe({
+      next: (data) => {      
+        this.allUserActions = data.userActionList;
+        this.end = this.allUserActions.length;
+        this.start = this.end - this.recordsPerPage;
+        this.userActions = this.allUserActions.slice(this.start, this.end);
+        this.totalRecords = data.totalCount;
+      },
+      error: (err) => this.handleError(err),
+      complete: () => {
+        console.log('Loading User Actions data completed')
+      }
+    });
   }
 
+  loadDataAfterDelete(offset: number, size: number) {
+    this.userActionService.getActionsPage(offset, size).subscribe({
+      next: (data) => {      
+        this.allUserActions = data.userActionList;
+        this.userActions = this.allUserActions.slice(this.start, this.end);
+        this.totalRecords = data.totalCount;
+      },
+      error: (err) => this.handleError(err),
+      complete: () => {console.log('Loading User Actions data completed')
+      }
+    });
+  }
+
+  deleteUserAction(id: number) {
+    if (confirm(AppConstants.deleteUserActionConfirmationMessage)) {
+      console.log('confirmed');
+      this.userActionService.deleteUserAction(id).subscribe({
+        next: () => { this.loadDataAfterDelete(this.offset, this.size) },
+        error: (error) => { this.errorMessage = error.error.error }
+      });
+    }
+  }
+
+  handleError(error: any) {
+    console.log('Error happend while loading user actions data' + JSON.stringify(error));
+  }
+
+  closeErrorMessage() {
+    this.errorMessage = null;
+  }
 }

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Paginator } from 'src/app/model/Paginator';
 import { Product } from 'src/app/model/Product';
 import { ProductService } from 'src/app/services/productservice.service';
-import { AppConstatnts } from 'src/app/utility/AppConstatnts';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/model/Category';
+import { AppConstants } from 'src/app/utility/AppConstants';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { Category } from 'src/app/model/Category';
 })
 export class ProductListComponent implements OnInit {
 
-  pageTitle: string = AppConstatnts.productListPageTitle;
+  pageTitle: string = AppConstants.productListPageTitle;
   products: Product[];
   allProducts: Product[];
   activePage: number;
@@ -66,14 +66,14 @@ export class ProductListComponent implements OnInit {
   displayActivePage(activePage: Paginator) {
     this.activePage = activePage.page;
     this.handleArrayChunck();
-    if (activePage.type === AppConstatnts.next) {
+    if (activePage.type === AppConstants.next) {
       if (this.activePage % this.cachedPagesSize == 1) {
         this.offset += 1;
         this.loadData(this.categoryId, this.offset, this.size);
       } else {
         this.products = this.allProducts.slice(this.start, this.end);
       }
-    } else if (activePage.type === AppConstatnts.previous) {
+    } else if (activePage.type === AppConstants.previous) {
       if (this.activePage % this.cachedPagesSize == 0) {
         this.offset -= 1;
         this.loadData(this.categoryId, this.offset, this.size);

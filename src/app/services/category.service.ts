@@ -5,7 +5,9 @@ import { Category } from '../model/Category'
 import { tap, catchError } from 'rxjs/operators';
 import { CategoryListResponse } from '../model/CategoryListResponse';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class CategoryService {
 
   private baseUrl = "http://localhost:8082/api/v1/categories";

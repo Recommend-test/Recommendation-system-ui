@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../services/category.service';
-import { AppConstatnts } from '../../utility/AppConstatnts';
 import { Category } from 'src/app/model/Category';
 import { Paginator } from 'src/app/model/Paginator';
+import { AppConstants } from 'src/app/utility/AppConstants';
 
 /**
  *
@@ -18,7 +18,7 @@ import { Paginator } from 'src/app/model/Paginator';
 })
 export class CategoryListComponent implements OnInit {
 
-  pageTitle: string = AppConstatnts.categoryListPageTitle;
+  pageTitle: string = AppConstants.categoryListPageTitle;
   categories: Category[];
   allCategories: Category[];
   activePage: number;
@@ -48,7 +48,7 @@ export class CategoryListComponent implements OnInit {
     this.activePage = 1;
     this.recordsPerPage = 10;
     this.offset = 0
-    this.size = 50;
+    this.size = 10;
     this.cachedPagesCount = this.size/this.recordsPerPage ;
     this.start = 0;
     this.end = this.recordsPerPage;
@@ -63,10 +63,10 @@ export class CategoryListComponent implements OnInit {
    */
   displayActivePage(activePage: Paginator) {
     this.activePage = activePage.page;
-    if (activePage.type === AppConstatnts.next) {
+    if (activePage.type === AppConstants.next) {
       this.start = this.end;
       this.end += this.recordsPerPage;
-      if (this.activePage % this.cachedPagesCount == 1) {
+      if (this.activePage % this.cachedPagesCount === 1 || this.recordsPerPage ===  this.size) {
         this.offset += 1;
         this.loadDataForNext(this.offset, this.size);
         this.categories = this.allCategories.slice(this.start, this.end);
@@ -74,10 +74,10 @@ export class CategoryListComponent implements OnInit {
         this.categories = this.allCategories.slice(this.start, this.end);
       }
     }
-    else if (activePage.type === AppConstatnts.previous) {
+    else if (activePage.type === AppConstants.previous) {
       this.start-=this.recordsPerPage;
       this.end-=this.recordsPerPage;
-      if (this.activePage % this.cachedPagesCount == 0) {
+      if (this.activePage % this.cachedPagesCount === 0 || this.recordsPerPage ===  this.size) {
         this.offset -= 1;
         this.loadDataForPrevious(this.offset, this.size);
       } else {
@@ -159,7 +159,7 @@ export class CategoryListComponent implements OnInit {
    * @memberof CategoryListComponent
    */
   deleteCategory(id: number) {
-    if (confirm(AppConstatnts.deleteCatConfirmationMessage)) {
+    if (confirm(AppConstants.deleteCatConfirmationMessage)) {
       console.log('confirmed');
       this.categoryService.deleteCategory(id).subscribe({
         next: () => { this.loadDataAfterDelete(this.offset, this.size) },
