@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+        {{pageTitle}}
+    </div>
+
+    <div class="card-body">
+        <form novalidate [formGroup]="userActionForm">
+
+            <div class="form-group row mb-2" *ngIf="showId">
+                <label class="col-md-2 col-form-label" for="actionId">Action Id</label>
+
+                <div class="col-md-8">
+                    <input class="form-control" id="actionId" disabled=true type="text" formControlName="id" />
+
+                </div>
+            </div>
+
+            <div class="form-group row mb-2">
+                <label class="col-md-2 col-form-label" for="actionNameId">Action Name</label>
+                <div class="col-md-8">
+                    <input class="form-control" id="actionNameId" type="text" placeholder="Name (required)"
+                        formControlName="actionName" [ngClass]="{'is-invalid': displayMessage.actionName }" />
+                    <span class="invalid-feedback">
+                        {{displayMessage.actionName}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group row mb-2">
+                <label class="col-md-2 col-form-label" for="weightId">Weight</label>
+                <div class="col-md-8">
+                    <input class="form-control" id="weightId" type="number" placeholder="Weight (required)"
+                        formControlName="weight" [ngClass]="{'is-invalid': displayMessage.weight }" />
+                    <span class="invalid-feedback">
+                        {{displayMessage.weight}}
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-group row mb-2">
+                <div class="offset-md-2 col-md-4">
+                    <button class="btn btn-primary mr-3" style="width:80px;" type="submit" (click)="updateUserAction()">
+                        Save
+                    </button>
+                    <button class="btn btn-outline-secondary mr-3" style="width:80px;" type="button"
+                        title="Cancel your edits" [routerLink]="['/actions']">
+                        Cancel
+                    </button>
+                   
+                </div>
+            </div>
+        </form>
+    </div>
+
+    
+    <error-message [errorMessage]="errorMessage" (close)="closeErrorMessage()"></error-message>
+</div>
