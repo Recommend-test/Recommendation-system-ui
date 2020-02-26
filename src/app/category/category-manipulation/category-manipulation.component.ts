@@ -6,7 +6,7 @@ import { GenericValidator } from '../../shared/GenericValidator';
 import { debounceTime } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/model/Category';
-import { AppConstatnts } from '../../utility/AppConstatnts';
+import { AppConstatnts } from '../../utility/AppConstants';
 
 
 @Component({
