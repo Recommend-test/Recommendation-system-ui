@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Paginator } from 'src/app/model/Paginator';
 import { Product } from 'src/app/model/Product';
 import { ProductService } from 'src/app/services/productservice.service';
+import { AppConstants } from 'src/app/utility/AppConstants';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/model/Category';
-import { AppConstants } from 'src/app/utility/AppConstants';
+import { ProductDataService } from '../data-service/ProductsDataService';
 
 
 @Component({
@@ -24,12 +25,13 @@ export class ProductListComponent implements OnInit {
   recordsPerPage: number;
   offset: number;
   size: number;
-  cachedPagesSize: number;
+  cachedPagesCount: number;
   start: number;
   end: number;
   errorMessage: string;
   allCategories: Category[];
   categoryId: number;
+  showAddButton:boolean;
 
 
 
@@ -38,7 +40,7 @@ export class ProductListComponent implements OnInit {
    * @param {productService} productService
    * @memberof ProductListComponent
    */
-  constructor(private productService: ProductService, private categoryService: CategoryService) { }
+  constructor(private productService: ProductService, private categoryService: CategoryService, private productDataService:ProductDataService ) { }
 
 
   /**
@@ -50,9 +52,10 @@ export class ProductListComponent implements OnInit {
     this.recordsPerPage = 10;
     this.offset = 0
     this.size = 30;
-    this.cachedPagesSize = 3;
+    this.cachedPagesCount = this.size/this.recordsPerPage ;
     this.start = 0;
     this.end = this.recordsPerPage;
+    this.showAddButton=true;
     this.loadAllCategoriesData();
   }
 
@@ -65,18 +68,23 @@ export class ProductListComponent implements OnInit {
    */
   displayActivePage(activePage: Paginator) {
     this.activePage = activePage.page;
-    this.handleArrayChunck();
     if (activePage.type === AppConstants.next) {
-      if (this.activePage % this.cachedPagesSize == 1) {
+      this.start = this.end;
+      this.end += this.recordsPerPage;
+      if (this.activePage % this.cachedPagesCount == 1 || this.recordsPerPage ===  this.size) {
         this.offset += 1;
-        this.loadData(this.categoryId, this.offset, this.size);
+        this.loadDataForNext(this.offset, this.size);
+        this.products = this.allProducts.slice(this.start, this.end);
       } else {
         this.products = this.allProducts.slice(this.start, this.end);
       }
-    } else if (activePage.type === AppConstants.previous) {
-      if (this.activePage % this.cachedPagesSize == 0) {
+    }
+    else if (activePage.type === AppConstants.previous) {
+      this.start-=this.recordsPerPage;
+      this.end-=this.recordsPerPage;
+      if (this.activePage % this.cachedPagesCount == 0 || this.recordsPerPage ===  this.size) {
         this.offset -= 1;
-        this.loadData(this.categoryId, this.offset, this.size);
+        this.loadDataForPrevious(this.offset, this.size);
       } else {
         this.products = this.allProducts.slice(this.start, this.end);
       }
@@ -102,46 +110,92 @@ export class ProductListComponent implements OnInit {
   }
 
 
-  /**
-   * This method used to load products based on offset and size.
-   *
-   * @param {number} offset Refer to page number.
-   * @param {number} size Refer to number of records per page.
-   * @memberof ProductListComponent
-   */
-  loadData(categoryId: number, offset: number, size: number) {
-    this.productService.getProducts(categoryId, offset, size).subscribe({
-      next: (data) => {
-        this.allProducts = data.productList;
-        this.products = this.allProducts.slice(this.start, this.end);
-        this.totalRecords = data.totalCount;
-      },
-      error: (err) => this.handleError(err),
-      complete: () => {
-        console.log('Load products data completed')
-      }
-    });
-  }
-
-
-
-  /**
-   * This method used to determine start and end to use them to get chunk of allProducts list.
-   *
-   * @memberof ProductListComponent
-   */
-  handleArrayChunck() {
-    if (this.activePage % this.cachedPagesSize == 1) {
+  
+ /**
+  *
+  *
+  * @param {number} offset
+  * @param {number} size
+  * @memberof CategoryListComponent
+  */
+ loadDataForNext(offset: number, size: number) {
+  this.productService.getProducts(this.categoryId,offset, size).subscribe({
+    next: (data) => {
+      this.allProducts = data.productList;
       this.start = 0;
       this.end = this.recordsPerPage;
-    } else if (this.activePage % this.cachedPagesSize == 2) {
-      this.start = this.recordsPerPage;
-      this.end = this.recordsPerPage * 2;
-    } else if (this.activePage % this.cachedPagesSize == 0) {
-      this.start = this.recordsPerPage * 2;
-      this.end = this.recordsPerPage * 3;
+      this.products = this.allProducts.slice(this.start, this.end);
+      this.totalRecords = data.totalCount;
+    },
+    error: (err) => this.handleError(err),
+    complete: () => {console.log('Load categories data completed')
+    }
+  });
+}
+
+/**
+ *
+ *
+ * @param {number} offset
+ * @param {number} size
+ * @memberof CategoryListComponent
+ */
+loadDataForPrevious(offset: number, size: number) {
+  this.productService.getProducts(this.categoryId,offset, size).subscribe({
+    next: (data) => {
+      this.allProducts = data.productList;
+      this.end = this.allProducts.length;
+      this.start = this.end - this.recordsPerPage;
+      this.products = this.allProducts.slice(this.start, this.end);
+      this.totalRecords = data.totalCount;
+    },
+    error: (err) => this.handleError(err),
+    complete: () => {console.log('Load categories data completed')
+    }
+  });
+}
+
+/**
+ *
+ *
+ * @param {number} offset
+ * @param {number} size
+ * @memberof CategoryListComponent
+ */
+loadDataAfterDelete(offset: number, size: number) {
+  this.productService.getProducts(this.categoryId,offset, size).subscribe({
+    next: (data) => {
+      this.allProducts = data.productList;
+      this.products = this.allProducts.slice(this.start, this.end);
+      this.totalRecords = data.totalCount;
+    },
+    error: (err) => this.handleError(err),
+    complete: () => {console.log('Load categories data completed')
+    }
+  });
+}
+   /**
+   * This method used to delete product by id.
+   *
+   * @param {number} id The id of product.
+   * @memberof ProductListComponent
+   */
+  deleteProduct(id: number) {
+    if (confirm(AppConstants.deleteProductConfirmationMessage)) {
+      console.log('confirmed');
+      this.productService.deleteProduct(id).subscribe({
+        next: () => { this.loadDataAfterDelete(this.offset, this.size) },
+        error: (error) => { this.errorMessage = error.error.error }
+      });
     }
   }
+
+
+  setSharedData(product:Product){
+   this.productDataService.updateProduct(product);
+   this.productDataService.updateCategoryId(this.categoryId);
+  }
+
 
   /**
    * This method used to log error if it happend while loading data.
@@ -182,8 +236,9 @@ export class ProductListComponent implements OnInit {
 
   onSelectCategory(selectedItem: any) {
     this.categoryId = selectedItem.item.id;
-    this.loadData(this.categoryId, this.offset, this.size);
-
+    this.loadDataForNext(this.offset, this.size);
+    this.productDataService.updateCategoryId(this.categoryId);
+    this.showAddButton=false;
   }
 
 

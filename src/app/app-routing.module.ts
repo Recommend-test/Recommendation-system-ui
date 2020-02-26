@@ -8,6 +8,9 @@ import { CategoryManipulationGuard } from './category/guard/category-manipulatio
 import { UserActionComponent } from './configuration/user-action/user-action.component';
 import { UserActionManipulationComponent } from './configuration/user-action-manipulation/user-action-manipulation.component';
 import { UserActionManipulationGuard } from './configuration/guard/user-action-manipulation.guard';
+import { ProductManipulationComponent } from './product/product-manipulation/product-manipulation.component';
+import { ProductManipulationGuardGuard } from './product/guard/product-manipulation-guard.guard';
+
 
 const routes: Routes = [
   { path: "products", component: ProductListComponent },
@@ -15,6 +18,7 @@ const routes: Routes = [
   { path: "categories/:id", component: CategoryManipulationComponent, canDeactivate: [CategoryManipulationGuard] },
   { path: "configuration", component: UserActionComponent },
   { path: "configuration/:id", component: UserActionManipulationComponent, canDeactivate: [UserActionManipulationGuard] },
+  { path: "products/:id", component: ProductManipulationComponent, canDeactivate: [ProductManipulationGuardGuard] },
   { path: "welcome", component: WelcomeComponent },
   { path: "", redirectTo: "welcome", pathMatch: "full" },
   { path: "**", redirectTo: "welcome", pathMatch: "full" }

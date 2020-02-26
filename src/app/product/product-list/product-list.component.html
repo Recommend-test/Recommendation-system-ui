@@ -4,8 +4,8 @@
   </div>
   <div class='card-body'>
 
-    <div class='clearfix'>
-      <button class="btn btn-primary btn-sm pull-right">
+    <div class='clearfix' >
+      <button class="btn btn-primary btn-sm pull-right" [disabled]="showAddButton" [routerLink]="['/products', 0]">
         <i class="fa fa-plus" aria-hidden="true"></i> Add Product
       </button>
     </div>
@@ -40,10 +40,10 @@
             <td>{{product.productDescription}}</td>
             <td>
               <button class="btn btn-outline-primary btn-sm" style="margin:5px;"
-                >
+              [routerLink]="['/products', product.id]" (click)="setSharedData(product)">
                 <i class="fa fa-pencil" aria-hidden="true"></i>
               </button>
-              <button class="btn btn-outline-primary btn-sm" >
+              <button class="btn btn-outline-primary btn-sm" (click)="deleteProduct(product.id)" >
                 <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </td>
